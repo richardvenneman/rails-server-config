@@ -2,23 +2,23 @@
 	const dynos = [
 		{
 			name: "Free",
-			capacity: "512MB"
+			capacity: 512
 		},
 		{
 			name: "Standard 1x",
-			capacity: "512MB"
+			capacity: 512
 		},
 		{
 			name: "Standard 2x",
-			capacity: "1GB"
+			capacity: 1024
 		},
 		{
 			name: "Performance M",
-			capacity: "2.5GB"
+			capacity: 2500
 		},
 		{
 			name: "Performance L",
-			capacity: "14GB"
+			capacity: 14000
 		}
 	];
 
@@ -32,11 +32,13 @@
 	let selectedDyno = null;
 	let selectedServer = null;
 	let usage = null;
+
+	$: workersCount = Math.floor((selectedDyno ? selectedDyno.capacity : 0) / (usage * 1.2));
 </script>
 
 <div class="px-5 flex flex-wrap md:px-0 md:h-screen">
 	<div class="w-full py-16 order-2 flex-none md:flex-1 md:py-10 md:pr-10 md:max-w-xl">
-		<div class="lg:flex lg:items-center">
+		<div class="lg:flex lg:items-center mb-6">
 			<div class="lg:w-1/4">
 				<label class="block pr-4 text-gray-600 font-medium lg:text-right mb-1 lg:mb-0" for="dyno">
 					Heroku Dyno
@@ -58,7 +60,6 @@
 				</div>
 			</div>
 		</div>
-		<small class="block mb-6 text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">{@html selectedDyno ? selectedDyno.capacity : '&nbsp;'}</small>
 
 		<div class="lg:flex lg:items-center mb-6">
 			<div class="lg:w-1/4">
@@ -90,10 +91,23 @@
 				</label>
 			</div>
 			<div class="lg:w-3/4">
-				<input bind:value={usage} class="shadow-inner appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="usage" type="number" placeholder="250MB">
+				<input on:change="{event => usage = parseInt(event.target.value, 10)}" class="shadow-inner appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="usage" type="number" placeholder="220">
 			</div>
 		</div>
-		<small class="block mb-6 text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">Input the RAM usage per process</small>
+		<small class="block mb-6 text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">Input the RAM usage per process, in MB's</small>
+
+		{#if selectedDyno && selectedServer && usage}
+			<div class="px-4 py-3 rounded bg-gray-800 font-mono text-gray-400">
+				{#if selectedServer === "Passenger" || selectedServer === "Passenger Enterprise"}
+					passenger_max_pool_size <span class="text-yellow-300">{workersCount}</span>;<br>
+					passenger_min_instances <span class="text-yellow-300">{workersCount}</span>;
+				{:else if selectedServer == "Puma"}
+					workers <span class="text-yellow-300">{workersCount}</span>
+				{:else if selectedServer == "Unicorn"}
+					worker_processes <span class="text-yellow-300">{workersCount}</span>
+				{/if}
+			</div>
+		{/if}
 	</div>
 
 	<aside class="py-16 w-full border-b border-gray-300 text-center order-1 md:max-w-sm md:p-10 md:text-left">
