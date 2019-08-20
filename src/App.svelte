@@ -28,30 +28,35 @@
 		}
 	];
 
-	const servers = [
-		{
+	$: servers = {
+		passenger: {
+			key: 0,
 			name: "Passenger",
-			cli: `passenger start --min-instances <span class="text-yellow-300">$WORKERS_COUNT</span> --max-pool-size <span class="text-yellow-300">$WORKERS_COUNT</span>`,
+			cli: `passenger start --min-instances <span class="text-yellow-300">${workersCount}</span> --max-pool-size <span class="text-yellow-300">${workersCount}</span>`,
 			configFile: "Nginx configuration",
-			config: `passenger_max_pool_size <span class="text-yellow-300">$WORKERS_COUNT</span>;<br>passenger_min_instances <span class="text-yellow-300">$WORKERS_COUNT</span>;`
+			config: `passenger_max_pool_size <span class="text-yellow-300">${workersCount}</span>;<br>passenger_min_instances <span class="text-yellow-300">${workersCount}</span>;`
 		},
-		{
+		passengerEnterprise: {
+			key: 1,
 			name: "Passenger Enterprise",
 			configFile: "Nginx configuration",
-			config: `passenger_max_pool_size <span class="text-yellow-300">$WORKERS_COUNT</span>;<br>passenger_min_instances <span class="text-yellow-300">$WORKERS_COUNT</span>;`
+			config: `passenger_max_pool_size <span class="text-yellow-300">${workersCount}</span>;<br>passenger_min_instances <span class="text-yellow-300">${workersCount}</span>;`
 		},
-		{
+		puma: {
+			key: 2,
 			name: "Puma",
-			cli: `puma -w <span class="text-yellow-300">$WORKERS_COUNT</span>`,
+			cli: `puma -w <span class="text-yellow-300">${workersCount}</span>`,
 			configFile: "config/puma.rb",
-			config: `workers <span class="text-yellow-300">$WORKERS_COUNT</span>`
+			config: `workers <span class="text-yellow-300">${workersCount}</span>`
 		},
-		{
+		unicorn: {
+			key: 3,
 			name: "Unicorn",
 			configFile: "config/unicorn.rb",
-			config: `worker_processes <span class="text-yellow-300">$WORKERS_COUNT</span>`
+			config: `worker_processes <span class="text-yellow-300">${workersCount}</span>`
 		}
-	];
+	};
+	$: server = servers[selectedServer]
 </script>
 
 <div class="px-5 flex flex-wrap md:px-0 md:h-screen">
@@ -89,9 +94,9 @@
 				<div class="inline-block relative w-full">
 					<select bind:value={selectedServer} class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" name="server">
 						<option selected disabled>-- Select app server --</option>
-						{#each servers as server}
-							<option value={server}>
-								{server.name}
+						{#each Object.entries(servers) as server}
+							<option value={server[0]}>
+								{server[1].name}
 							</option>
 						{/each}
 					</select>
@@ -116,16 +121,16 @@
 
 		{#if selectedDyno && selectedServer && usage}
 			<div class="mt-10 pt-10 border-t border-gray-300">
-				{#if selectedServer.cli}
+				{#if server.cli}
 					<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">Command line syntax</p>
 					<div class="mb-8 px-4 py-3 rounded bg-gray-800 font-mono text-gray-300 select-all">
-						{@html selectedServer.cli.replace(/\$WORKERS_COUNT/g, workersCount)}
+						{@html server.cli}
 					</div>
 				{/if}
 
-				<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">{selectedServer.configFile}</p>
+				<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">{server.configFile}</p>
 				<div class="px-4 py-3 rounded bg-gray-800 font-mono text-gray-300 select-all">
-					{@html selectedServer.config.replace(/\$WORKERS_COUNT/g, workersCount)}
+					{@html server.config}
 				</div>
 			</div>
 		{/if}
