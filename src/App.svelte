@@ -1,4 +1,10 @@
 <script>
+	let selectedDyno = null;
+	let selectedServer = null;
+	let usage = 200;
+	let workersCount = null;
+	$: workersCount = Math.floor((selectedDyno ? selectedDyno.capacity : 0) / (usage * 1.2));
+
 	const dynos = [
 		{
 			name: "Free",
@@ -23,17 +29,29 @@
 	];
 
 	const servers = [
-		"Passenger",
-		"Passenger Enterprise",
-		"Puma",
-		"Unicorn"
+		{
+			name: "Passenger",
+			cli: `passenger start --min-instances <span class="text-yellow-300">$WORKERS_COUNT</span> --max-pool-size <span class="text-yellow-300">$WORKERS_COUNT</span>`,
+			configFile: "Nginx configuration",
+			config: `passenger_max_pool_size <span class="text-yellow-300">$WORKERS_COUNT</span>;<br>passenger_min_instances <span class="text-yellow-300">$WORKERS_COUNT</span>;`
+		},
+		{
+			name: "Passenger Enterprise",
+			configFile: "Nginx configuration",
+			config: `passenger_max_pool_size <span class="text-yellow-300">$WORKERS_COUNT</span>;<br>passenger_min_instances <span class="text-yellow-300">$WORKERS_COUNT</span>;`
+		},
+		{
+			name: "Puma",
+			cli: `puma -w <span class="text-yellow-300">$WORKERS_COUNT</span>`,
+			configFile: "config/puma.rb",
+			config: `workers <span class="text-yellow-300">$WORKERS_COUNT</span>`
+		},
+		{
+			name: "Unicorn",
+			configFile: "config/unicorn.rb",
+			config: `worker_processes <span class="text-yellow-300">$WORKERS_COUNT</span>`
+		}
 	];
-
-	let selectedDyno = null;
-	let selectedServer = null;
-	let usage = null;
-
-	$: workersCount = Math.floor((selectedDyno ? selectedDyno.capacity : 0) / (usage * 1.2));
 </script>
 
 <div class="px-5 flex flex-wrap md:px-0 md:h-screen">
@@ -73,7 +91,7 @@
 						<option selected disabled>-- Select app server --</option>
 						{#each servers as server}
 							<option value={server}>
-								{server}
+								{server.name}
 							</option>
 						{/each}
 					</select>
@@ -94,18 +112,21 @@
 				<input on:change="{event => usage = parseInt(event.target.value, 10)}" class="shadow-inner appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="usage" type="number" placeholder="220">
 			</div>
 		</div>
-		<small class="block mb-6 text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">Input the RAM usage per process, in MB's</small>
+		<small class="block text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">Input the RAM usage per process, in MB's</small>
 
 		{#if selectedDyno && selectedServer && usage}
-			<div class="px-4 py-3 rounded bg-gray-800 font-mono text-gray-400">
-				{#if selectedServer === "Passenger" || selectedServer === "Passenger Enterprise"}
-					passenger_max_pool_size <span class="text-yellow-300">{workersCount}</span>;<br>
-					passenger_min_instances <span class="text-yellow-300">{workersCount}</span>;
-				{:else if selectedServer == "Puma"}
-					workers <span class="text-yellow-300">{workersCount}</span>
-				{:else if selectedServer == "Unicorn"}
-					worker_processes <span class="text-yellow-300">{workersCount}</span>
+			<div class="mt-10 pt-10 border-t border-gray-300">
+				{#if selectedServer.cli}
+					<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">Command line syntax</p>
+					<div class="mb-8 px-4 py-3 rounded bg-gray-800 font-mono text-gray-300 select-all">
+						{@html selectedServer.cli.replace(/\$WORKERS_COUNT/g, workersCount)}
+					</div>
 				{/if}
+
+				<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">{selectedServer.configFile}</p>
+				<div class="px-4 py-3 rounded bg-gray-800 font-mono text-gray-300 select-all">
+					{@html selectedServer.config.replace(/\$WORKERS_COUNT/g, workersCount)}
+				</div>
 			</div>
 		{/if}
 	</div>
