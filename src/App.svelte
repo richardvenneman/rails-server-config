@@ -1,10 +1,7 @@
 <script>
 	let selectedDyno = null;
-	let selectedServer = null;
-	let usage = 200;
-	let workersCount = null;
-	$: workersCount = Math.floor((selectedDyno ? selectedDyno.capacity : 0) / (usage * 1.2));
-
+	let selectedServer = "passenger";
+	let usage = null;
 	const dynos = [
 		{
 			name: "Free",
@@ -28,6 +25,7 @@
 		}
 	];
 
+	$: workersCount = Math.floor((selectedDyno ? selectedDyno.capacity : 0) / (usage * 1.2));
 	$: servers = {
 		passenger: {
 			key: 0,
@@ -60,7 +58,7 @@
 </script>
 
 <div class="px-5 flex flex-wrap md:px-0 md:h-screen">
-	<div class="w-full py-16 order-2 flex-none md:flex-1 md:py-10 md:pr-10 md:max-w-xl">
+	<div class="w-full py-16 order-2 flex-none md:flex-1 md:py-10 md:pr-10 md:max-w-2xl">
 		<div class="lg:flex lg:items-center mb-6">
 			<div class="lg:w-1/4">
 				<label class="block pr-4 text-gray-600 font-medium lg:text-right mb-1 lg:mb-0" for="dyno">
@@ -84,7 +82,7 @@
 			</div>
 		</div>
 
-		<div class="lg:flex lg:items-center mb-6">
+		<div class="mb-6 md:hidden">
 			<div class="lg:w-1/4">
 				<label class="block pr-4 text-gray-600 font-medium lg:text-right mb-1 lg:mb-0" for="server">
 					App server
@@ -119,17 +117,25 @@
 		</div>
 		<small class="block text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">Input the RAM usage per process, in MB's</small>
 
-		{#if selectedDyno && selectedServer && usage}
-			<div class="mt-10 pt-10 border-t border-gray-300">
+		{#if selectedDyno && usage}
+			<div class="mt-16 pt-5 border-t border-gray-300 md:mt-10 md:border-0 md:pt-0 lg:mt-16">
+				<ul class="hidden md:flex mb-5 justify-between border-b border-gray-300">
+					{#each Object.entries(servers) as server}
+						<li>
+							<button on:click="{e => selectedServer = server[0]}" class="inline-block font-medium text-sm lg:text-base pb-3 {server[0] == selectedServer ? 'text-gray-900 pointer-events-none' : 'text-gray-600'}" href="#">{server[1].name}</button>
+						</li>
+					{/each}
+				</ul>
+
 				{#if server.cli}
 					<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">Command line syntax</p>
-					<div class="mb-8 px-4 py-3 rounded bg-gray-800 font-mono text-gray-300 select-all">
+					<div class="mb-8 px-4 py-3 rounded bg-gray-800 font-mono text-sm text-gray-300 select-all lg:text-base">
 						{@html server.cli}
 					</div>
 				{/if}
 
 				<p class="mb-1 text-sm uppercase tracking-tight text-gray-700 font-bold">{server.configFile}</p>
-				<div class="px-4 py-3 rounded bg-gray-800 font-mono text-gray-300 select-all">
+				<div class="px-4 py-3 rounded bg-gray-800 font-mono text-sm text-gray-300 select-all lg:text-base">
 					{@html server.config}
 				</div>
 			</div>
