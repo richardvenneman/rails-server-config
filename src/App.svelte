@@ -31,6 +31,7 @@
 
 	let selectedDyno = null;
 	let selectedServer = null;
+	let usage = null;
 </script>
 
 <div class="px-5 flex flex-wrap md:px-0 md:h-screen">
@@ -81,7 +82,20 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="lg:flex lg:items-center">
+			<div class="lg:w-1/4">
+				<label class="block pr-4 text-gray-600 font-medium lg:text-right mb-1 lg:mb-0" for="usage">
+					RAM usage
+				</label>
+			</div>
+			<div class="lg:w-3/4">
+				<input bind:value={usage} class="shadow-inner appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="usage" type="number" placeholder="250MB">
+			</div>
+		</div>
+		<small class="block mb-6 text-gray-600 mt-1 text-sm lg:ml-auto lg:w-3/4">Input the RAM usage per process</small>
 	</div>
+
 	<aside class="py-16 w-full border-b border-gray-300 text-center order-1 md:max-w-sm md:p-10 md:text-left">
 		<h1 class="text-3xl leading-none text-gray-900 font-light">Rails server config</h1>
 		<h2 class="mx-5 text-gray-600 leading-snug mt-3 md:mx-0">
