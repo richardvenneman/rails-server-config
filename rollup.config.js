@@ -16,7 +16,10 @@ export default {
 		file: 'public/bundle.js'
 	},
 	plugins: [
-		postcss({ extract: true }),
+		postcss({
+			extract: true,
+			minimize: production
+		}),
 
 		svelte({
 			// enable run-time checks when not in production
