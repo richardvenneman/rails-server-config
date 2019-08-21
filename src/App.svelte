@@ -147,10 +147,10 @@
 		</h2>
 
 		<h3 class="mt-16 mb-1 uppercase tracking-tight text-gray-600 font-bold">What is this?</h3>
-		<p class="text-gray-700 max-w-xs mx-auto md:max-w-full">A tool to quickly calculate the maximum number of workers based on your app memory usage and Heroku dyno.</p>
+		<p class="text-gray-700 max-w-xs mx-auto md:max-w-full">A tool to quickly calculate the maximum number of workers based on your Heroku dyno and app memory usage.</p>
 
 		<h3 class="mt-12 mb-1 uppercase tracking-tight text-gray-600 font-bold">Why is this important?</h3>
-		<p class="text-gray-700 max-w-xs mx-auto md:max-w-full">Correctly configuring the number of workers in your web server can have a major impact on the throughput and performance of your application. Read up on this in <a class="font-medium text-blue-500 hover:text-blue-700" href="https://www.speedshop.co/2017/10/12/appserver.html">Configuring Puma, Unicorn and Passenger for Maximum Efficiency</a>.</p>
+		<p class="text-gray-700 max-w-xs mx-auto md:max-w-full">Correctly configuring the number of workers in your web server can have a major impact on the throughput and performance of your application. Read more in the <a class="font-medium text-blue-500 hover:text-blue-700" href="https://www.speedshop.co/2017/10/12/appserver.html">speedshop article on web server configuration</a>.</p>
 
 		<h3 class="mt-12 mb-1 uppercase tracking-tight text-gray-600 font-bold">How was this built?</h3>
 		<p class="text-gray-700 max-w-xs mx-auto md:max-w-full">This little app was built because I wanted to give <a class="font-medium text-blue-500 hover:text-blue-700" href="https://svelte.dev">Svelte</a> and <a class="font-medium text-blue-500 hover:text-blue-700" href="https://tailwindcss.com">Tailwind CSS</a> a try. The <a class="font-medium text-blue-500 hover:text-blue-700" href="https://github.com/richardvenneman/rails-server-config">source code is on GitHub</a>.</p>
