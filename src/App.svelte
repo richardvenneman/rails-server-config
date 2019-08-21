@@ -5,22 +5,27 @@
 	const dynos = [
 		{
 			name: "Free",
+			label: "512MB",
 			capacity: 512
 		},
 		{
 			name: "Standard 1x",
+			label: "512MB",
 			capacity: 512
 		},
 		{
 			name: "Standard 2x",
+			label: "1GB",
 			capacity: 1024
 		},
 		{
 			name: "Performance M",
+			label: "2.5GB",
 			capacity: 2500
 		},
 		{
 			name: "Performance L",
+			label: "14GB",
 			capacity: 14000
 		}
 	];
@@ -77,6 +82,7 @@
 						<svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
 					</div>
 				</div>
+				<small class="block text-gray-600 mt-1 text-sm">{selectedDyno ? selectedDyno.label : ''}</small>
 			</div>
 
 			<div class="lg:w-1/2 lg:pl-4">
@@ -88,7 +94,7 @@
 			</div>
 		</div>
 
-		<div class="mb-6 md:hidden">
+		<div class="my-6 md:hidden">
 			<label class="block mb-1 pr-4 text-gray-600 font-medium lg:text-right" for="server">
 				App server
 			</label>
@@ -133,13 +139,13 @@
 	</div>
 
 	<aside class="py-16 w-full border-b border-gray-300 text-center order-1 md:max-w-md md:pl-10 md:pr-24 md:text-left">
-		<h1 class="text-3xl leading-none text-gray-900 font-light">Rails server config</h1>
-		<h2 class="mx-5 mt-3 text-gray-600 leading-snug md:mx-0">
+		<h1 class="text-4xl leading-none text-gray-900 font-light">Rails server config</h1>
+		<h2 class="mt-5 text-lg text-gray-600 leading-snug md:mx-0">
 			Configure your Ruby web server
 			<span class="block">for maximum performance</span>
 		</h2>
 
-		<h3 class="mt-12 mb-1 uppercase tracking-tight text-gray-600 font-bold">What is this?</h3>
+		<h3 class="mt-16 mb-1 uppercase tracking-tight text-gray-600 font-bold">What is this?</h3>
 		<p class="text-gray-700 max-w-xs mx-auto md:max-w-full">A tool to quickly calculate the maximum number of workers based on your app memory usage and Heroku dyno.</p>
 
 		<h3 class="mt-12 mb-1 uppercase tracking-tight text-gray-600 font-bold">Why is this important?</h3>
