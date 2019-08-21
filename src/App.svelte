@@ -42,15 +42,16 @@
 		passengerEnterprise: {
 			key: 1,
 			name: "Passenger Enterprise",
+			cli: `passenger start --min-instances <span class="text-yellow-300">${workersCount}</span> --max-pool-size <span class="text-yellow-300">${workersCount}</span>`,
 			configFile: "Nginx configuration",
-			config: `passenger_max_pool_size <span class="text-yellow-300">${workersCount}</span>;<br>passenger_min_instances <span class="text-yellow-300">${workersCount}</span>;`
+			config: `passenger_max_pool_size <span class="text-yellow-300">${workersCount}</span>;<br>passenger_min_instances <span class="text-yellow-300">${workersCount}</span>;<br><br>passenger_concurrency_model thread;<br>passenger_thread_count <span class="text-yellow-300">5</span>;`
 		},
 		puma: {
 			key: 2,
 			name: "Puma",
-			cli: `puma -w <span class="text-yellow-300">${workersCount}</span>`,
+			cli: `puma -w <span class="text-yellow-300">${workersCount}</span> -t <span class="text-yellow-300">5</span>:<span class="text-yellow-300">5</span>`,
 			configFile: "config/puma.rb",
-			config: `workers <span class="text-yellow-300">${workersCount}</span>`
+			config: `workers <span class="text-yellow-300">${workersCount}</span><br><br>threads <span class="text-yellow-300">5</span>, <span class="text-yellow-300">5</span>`
 		},
 		unicorn: {
 			key: 3,
